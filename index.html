@@ -157,7 +157,7 @@ transform: translateY(-2px);
 
         .service-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 22px;
             margin-top: 35px;
         }
@@ -634,8 +634,7 @@ footer p {
 
             <label>
                 <input type="checkbox" id="review-consent" required>
-                I agree that my display name and review may be
-                shown publicly if approved.
+               I agree that my review may be published on the AcademicNexa Pro website.
             </label>
 
             <input type="text" id="website-check"
@@ -903,6 +902,17 @@ footer p {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
     margin-top: 25px;
+}
+@media (max-width: 850px) {
+    #reviews-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    #reviews-list {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 <script type="module">
