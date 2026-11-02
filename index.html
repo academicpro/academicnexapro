@@ -963,6 +963,38 @@ footer p {
 #review-form input[type="checkbox"] {
     margin-top: 7px;
 }
+/* Prevent service and FAQ text from overlapping */
+.service-card,
+.faq-item {
+    height: auto;
+    min-height: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.service-card h3,
+.service-card p,
+.faq-item h3,
+.faq-item p {
+    height: auto;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.service-card {
+    padding: 25px;
+    box-sizing: border-box;
+}
+@media (max-width: 600px) {
+    .service-card {
+        margin-bottom: 15px;
+    }
+
+    .faq-item {
+        margin-bottom: 15px;
+    }
+}
 </style>
 <script type="module">
 import { createClient } from
