@@ -137,6 +137,44 @@ button {
         padding: 20px;
     }
 }
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.summary-card {
+    background: #ffffff;
+    border-left: 5px solid #1456a0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(16, 61, 115, 0.08);
+}
+
+.summary-card h3 {
+    color: #103d73;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.summary-card p {
+    color: #1456a0;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+@media (max-width: 750px) {
+    .summary-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 450px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
 
@@ -171,6 +209,27 @@ button {
 
     <section id="dashboard-panel" class="panel hidden">
         <h2>Student Review Management</h2>
+        <div class="summary-cards">
+    <div class="summary-card">
+        <h3>Total Reviews</h3>
+        <p id="total-reviews">0</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Pending Reviews</h3>
+        <p id="pending-reviews">0</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Approved Reviews</h3>
+        <p id="approved-reviews">0</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Rejected Reviews</h3>
+        <p id="rejected-reviews">0</p>
+    </div>
+</div>
 
         <p>Manage submitted student reviews below.</p>
 
@@ -268,7 +327,20 @@ document.getElementById('login-form')
     await checkAdmin();
 });
 
-async function loadReviews() {
+function updateSummary(reviews) {
+    document.getElementById('total-reviews').textContent =
+        reviews.length;
+
+    document.getElementById('pending-reviews').textContent =
+        reviews.filter(review => review.status === 'pending').length;
+
+    document.getElementById('approved-reviews').textContent =
+        reviews.filter(review => review.status === 'approved').length;
+
+    document.getElementById('rejected-reviews').textContent =
+        reviews.filter(review => review.status === 'rejected').length;
+}
+    async function loadReviews() {
     reviewsContainer.textContent = 'Loading reviews...';
 
     const { data, error } = await supabase
@@ -282,6 +354,7 @@ async function loadReviews() {
         return;
     }
 
+    updateSummary(data || []);
     reviewsContainer.replaceChildren();
 
     if (!data || data.length === 0) {
