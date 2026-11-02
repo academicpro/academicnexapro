@@ -594,28 +594,61 @@ footer p {
 
   <!-- Testimonials Section -->
 <section class="section" id="testimonials">
-    <h2>Client Feedback Matters</h2>
+    <h2>Student Reviews</h2>
 
-<p class="section-intro">
-    Your experience and satisfaction matter to us. We continuously
-    strive to provide professional, reliable and quality services.
-</p>
-
-<div class="contact-box">
-    <h3>Share Your Experience</h3>
-
-    <p>
-        Have you used AcademicNexa Pro? We welcome your honest
-        feedback and suggestions. Your experience helps us improve
-        our services and serve our clients better.
+    <p class="section-intro">
+        We value your feedback. Share your honest experience
+        with AcademicNexa Pro and help us improve our services.
     </p>
 
-    <a href="https://wa.me/254100933935?text=Hello%20AcademicNexa%20Pro.%20I%20would%20like%20to%20share%20my%20feedback."
-       class="contact-button">
-        Share Your Feedback
-    </a>
-</div>
+    <div id="reviews-list">
+        <p>Loading reviews...</p>
+    </div>
 
+    <div class="contact-box">
+        <h3>Share Your Experience</h3>
+
+        <form id="review-form">
+            <label for="student-name">Your Display Name</label>
+            <input type="text" id="student-name"
+                   maxlength="80" minlength="2" required>
+
+            <label for="review-service">Service Used (Optional)</label>
+            <input type="text" id="review-service"
+                   maxlength="100">
+
+            <label for="review-rating">Your Rating</label>
+            <select id="review-rating" required>
+                <option value="">Select a rating</option>
+                <option value="5">★★★★★ - Excellent</option>
+                <option value="4">★★★★ - Very Good</option>
+                <option value="3">★★★ - Good</option>
+                <option value="2">★★ - Fair</option>
+                <option value="1">★ - Poor</option>
+            </select>
+
+            <label for="review-message">Your Review</label>
+            <textarea id="review-message" rows="5"
+                      minlength="10" maxlength="1000"
+                      required></textarea>
+
+            <label>
+                <input type="checkbox" id="review-consent" required>
+                I agree that my display name and review may be
+                shown publicly if approved.
+            </label>
+
+            <input type="text" id="website-check"
+                   style="display:none" tabindex="-1"
+                   autocomplete="off">
+
+            <button type="submit" class="contact-button">
+                Submit Review
+            </button>
+
+            <p id="review-message-status" aria-live="polite"></p>
+        </form>
+    </div>
 </section>
 
 <section class="section" id="faq">
@@ -839,5 +872,112 @@ footer p {
     transform: translateY(-3px);
 }
 </style>
+<script type="module">
+import { createClient } from
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://pnherqvwcijxxpmvkult.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_puPHAUDfnQTwLV9al2phBA_jJb_wlLU';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const reviewsList = document.getElementById('reviews-list');
+const reviewForm = document.getElementById('review-form');
+const statusMessage = document.getElementById('review-message-status');
+
+async function loadReviews() {
+    const { data, error } = await supabase
+        .from('student_reviews')
+        .select('student_name, service, rating, review, created_at')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false });
+
+    reviewsList.replaceChildren();
+
+    if (error) {
+        reviewsList.textContent = 'Reviews are temporarily unavailable.';
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        reviewsList.textContent = 'Be the first to share your experience.';
+        return;
+    }
+
+    data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'contact-box';
+
+        const name = document.createElement('h3');
+        name.textContent = item.student_name;
+
+        const rating = document.createElement('p');
+        rating.textContent = '★'.repeat(item.rating) +
+            '☆'.repeat(5 - item.rating);
+
+        const review = document.createElement('p');
+        review.textContent = item.review;
+
+        card.append(name, rating);
+
+        if (item.service) {
+            const service = document.createElement('p');
+            service.textContent = 'Service: ' + item.service;
+            card.append(service);
+        }
+
+        card.append(review);
+        reviewsList.append(card);
+    });
+}
+
+reviewForm.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    if (document.getElementById('website-check').value !== '') {
+        return;
+    }
+
+    const studentName =
+        document.getElementById('student-name').value.trim();
+    const service =
+        document.getElementById('review-service').value.trim();
+    const rating =
+        Number(document.getElementById('review-rating').value);
+    const review =
+        document.getElementById('review-message').value.trim();
+    const consent =
+        document.getElementById('review-consent').checked;
+
+    if (!consent) {
+        statusMessage.textContent = 'Please confirm your consent.';
+        return;
+    }
+
+    statusMessage.textContent = 'Submitting your review...';
+
+    const { error } = await supabase
+        .from('student_reviews')
+        .insert([{
+            student_name: studentName,
+            service: service || null,
+            rating: rating,
+            review: review,
+            status: 'pending'
+        }]);
+
+    if (error) {
+        statusMessage.textContent =
+            'We could not submit your review. Please try again.';
+        return;
+    }
+
+    reviewForm.reset();
+    statusMessage.textContent =
+        'Thank you for sharing your feedback with AcademicNexa Pro!';
+});
+
+loadReviews();
+</script>
 </body>
 </html>
