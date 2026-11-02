@@ -72,49 +72,67 @@ color: #f0a500;
 }
 
 
-        .hero {
-            background: linear-gradient(135deg, #103d73, #1976b9);
-            color: white;
-            padding: 100px 8%;
-            text-align: center;
-        }
+      .hero {
+background: linear-gradient(135deg, #103d73, #1976b9);
+color: white;
+padding: 110px 8%;
+text-align: center;
+border-bottom: 5px solid #f0a500;
+}
 
-        .hero h1 {
-            font-size: clamp(34px, 5vw, 55px);
-            line-height: 1.2;
-            max-width: 850px;
-            margin: 0 auto 22px;
-        }
 
-        .hero p {
-            font-size: 18px;
-            max-width: 700px;
-            margin: 0 auto 32px;
-            color: #e6efff;
-        }
+     .hero h1 {
+font-size: clamp(36px, 5.2vw, 58px);
+line-height: 1.15;
+font-weight: 800;
+letter-spacing: -1px;
+max-width: 900px;
+margin: 0 auto 24px;
+}
 
-        .button {
-            display: inline-block;
-            padding: 13px 25px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 6px;
-        }
 
-        .button-primary {
-            background: #f0a500;
-            color: #17263c;
-        }
+       .hero p {
+font-size: 18px;
+max-width: 760px;
+margin: 0 auto 30px;
+color: #f0f5ff;
+line-height: 1.8;
+}
 
-        .button-primary:hover {
-            background: #ffc233;
-        }
 
-        .button-outline {
-            border: 2px solid white;
-            color: white;
-        }
+       .button {
+display: inline-block;
+padding: 14px 28px;
+border-radius: 7px;
+text-decoration: none;
+font-weight: 700;
+margin: 7px;
+transition: all 0.3s ease;
+}
+
+.button-primary {
+background: #f0a500;
+color: #17263c;
+border: 2px solid #f0a500;
+}
+
+.button-primary:hover {
+background: #ffc233;
+border-color: #ffc233;
+transform: translateY(-2px);
+}
+
+.button-outline {
+border: 2px solid white;
+color: white;
+background: transparent;
+}
+
+.button-outline:hover {
+background: white;
+color: #103d73;
+transform: translateY(-2px);
+}
 
         .section {
             padding: 75px 8%;
@@ -270,7 +288,6 @@ nav a {
 .section {
     padding: 55px 6%;
 }
-```
 
 }
 
